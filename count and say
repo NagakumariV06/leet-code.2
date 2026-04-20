@@ -1,0 +1,28 @@
+class Solution {
+public:
+    string countAndSay(int n) {
+        if (n == 1) return "1";
+        
+        string curr = "1";
+        
+        // Generate the sequence up to n
+        for (int i = 2; i <= n; i++) {
+            string next = "";
+            int len = curr.length();
+            
+            for (int j = 0; j < len; j++) {
+                int count = 1;
+                // Count consecutive occurrences of the same character
+                while (j + 1 < len && curr[j] == curr[j + 1]) {
+                    count++;
+                    j++;
+                }
+                // Append "count" then "digit"
+                next += to_string(count) + curr[j];
+            }
+            curr = next;
+        }
+        
+        return curr;
+    }
+};
