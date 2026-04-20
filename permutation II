@@ -1,0 +1,43 @@
+#include <vector>
+#include <unordered_set>
+
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<int>> permuteUnique(vector<int>& nums) {
+        vector<vector<int>> result;
+        backtrack(nums, 0, result);
+        return result;
+    }
+
+private:
+    void backtrack(vector<int>& nums, int begin, vector<vector<int>>& result) {
+        // Base case: if begin reaches the end, a valid permutation is formed
+        if (begin >= nums.size()) {
+            result.push_back(nums);
+            return;
+        }
+        
+        // Use a set to track elements we have already placed at position 'begin'
+        unordered_set<int> used;
+        
+        for (int i = begin; i < nums.size(); ++i) {
+            // If the element has already been used at this depth, skip it
+            if (used.find(nums[i]) != used.end()) {
+                continue;
+            }
+            
+            used.insert(nums[i]);
+            
+            // Swap the current element with the element at the 'begin' position
+            swap(nums[begin], nums[i]);
+            
+            // Recurse for the next position
+            backtrack(nums, begin + 1, result);
+            
+            // Backtrack: restore the original state
+            swap(nums[begin], nums[i]);
+        }
+    }
+};
