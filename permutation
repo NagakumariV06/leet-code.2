@@ -1,0 +1,32 @@
+#include <vector>
+
+using namespace std;
+
+class Solution {
+public:
+    vector<vector<int>> permute(vector<int>& nums) {
+        vector<vector<int>> result;
+        backtrack(nums, 0, result);
+        return result;
+    }
+
+private:
+    void backtrack(vector<int>& nums, int begin, vector<vector<int>>& result) {
+        // Base case: if begin reaches the end, a valid permutation is formed
+        if (begin >= nums.size()) {
+            result.push_back(nums);
+            return;
+        }
+        
+        for (int i = begin; i < nums.size(); ++i) {
+            // Swap the current element with the element at the 'begin' position
+            swap(nums[begin], nums[i]);
+            
+            // Recurse for the next position
+            backtrack(nums, begin + 1, result);
+            
+            // Backtrack: restore the original state
+            swap(nums[begin], nums[i]);
+        }
+    }
+};
