@@ -1,0 +1,44 @@
+class Solution {
+public:
+    vector<int> findSubstring(string s, vector<string>& words) {
+        vector<int> res;
+        int n = s.length(), num_words = words.size(), word_len = words[0].length();
+        if (n < num_words * word_len) return res;
+
+        unordered_map<string, int> word_counts;
+        for (const string& w : words) word_counts[w]++;
+
+        // Run the sliding window starting from each possible offset within one word length
+        for (int i = 0; i < word_len; ++i) {
+            int left = i, count = 0;
+            unordered_map<string, int> window_counts;
+
+            for (int j = i; j <= n - word_len; j += word_len) {
+                string word = s.substr(j, word_len);
+                if (word_counts.count(word)) {
+                    window_counts[word]++;
+                    count++;
+
+                    // If we have more of 'word' than needed, slide the left pointer
+                    while (window_counts[word] > word_counts[word]) {
+                        string left_word = s.substr(left, word_len);
+                        window_counts[left_word]--;
+                        count--;
+                        left += word_len;
+                    }
+
+                    // If all words are matched
+                    if (count == num_words) {
+                        res.push_back(left);
+                    }
+                } else {
+                    // Not a valid word, reset the window
+                    window_counts.clear();
+                    count = 0;
+                    left = j + word_len;
+                }
+            }
+        }
+        return res;
+    }
+};
